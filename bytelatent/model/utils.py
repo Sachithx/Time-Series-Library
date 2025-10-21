@@ -1,10 +1,7 @@
 # Copyright (c) Meta Platforms, Inc. and affiliates.
 import logging
 import os
-
 import torch
-from torch.nn.attention.flex_attention import create_block_mask
-# from xformers.ops import fmha
 
 logger = logging.getLogger()
 
@@ -20,7 +17,7 @@ def patch_reduce(h, max_num_patches, reduction, patch_ids):
     (i.e. if the sum(patch_lengths[i]) < seq_len for any i)
     will be sent to a dummy patch, which is trimmed before returning.
     """
-    bs, seq_len, emb_dim = h.shape
+    bs, _, emb_dim = h.shape
 
     patch_ids = patch_ids.unsqueeze(-1).expand(-1, -1, h.shape[-1])
 

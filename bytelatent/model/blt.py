@@ -6,7 +6,6 @@ from typing import Optional
 import torch
 from pydantic import model_validator
 from torch import nn
-from torch.nn.attention.flex_attention import create_block_mask
 from typing_extensions import Self
 
 from bytelatent.base_transformer import (
@@ -159,22 +158,9 @@ def cross_attn_mask(
         
         assert cross_mask.shape == (bs, q_len, kv_len)
 
-        if block_mask:
-            def patch_mask(b, h, q_idx, kv_idx):
-                return cross_mask[b, q_idx, kv_idx]
-
-            return create_block_mask(
-                patch_mask,
-                B=bs,
-                H=None,
-                Q_LEN=q_len,
-                KV_LEN=kv_len,
-                _compile=True,
-            )
-        else:
-            return torch.where(
-                cross_mask, torch.tensor(0.0), torch.tensor(float("-inf"))
-            ).unsqueeze(1)
+        return torch.where(
+            cross_mask, torch.tensor(0.0), torch.tensor(float("-inf"))
+        ).unsqueeze(1)
 
 
 # ============================================================================

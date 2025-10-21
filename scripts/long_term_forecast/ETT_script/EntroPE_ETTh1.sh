@@ -1,5 +1,5 @@
 #!/bin/bash
-
+export CUDA_VISIBLE_DEVICES=0,1
 mkdir -p ./logs/LongForecasting
 
 # Common parameters
@@ -13,32 +13,32 @@ enc_in=7
 seq_len=96
 
 # Random seeds
-random_seeds="1025"
+random_seeds="1025 2048 3072 4096 5120"
 
-# Detect GPUs
+# Limit to first 2 GPUs only
+export CUDA_VISIBLE_DEVICES=0,1
+
+# Detect available GPUs (now only sees GPU 0 and 1)
 if command -v nvidia-smi &> /dev/null; then
-    NUM_GPUS=$(nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null | wc -l)
-    if [ "$NUM_GPUS" -eq 0 ]; then
-        NUM_GPUS=1
-    fi
+    NUM_GPUS=2  # Fixed to 2 GPUs
 else
     NUM_GPUS=1
 fi
-echo "Using $NUM_GPUS GPU(s)"
+echo "Using $NUM_GPUS GPU(s) (Limited to GPUs 0,1)"
 
 # Format: pred_len:quant_range:dim:multiple_of:heads:layers:batch_size:lr:dropout:max_patch:patching_threshold:patching_threshold_add:pct_start:epochs:patience:cross_attn_k:attn_window
 configs=(
     # pred_len 96 - smallest model, higher batch size
     "96:3:8:256:1:1:256:0.001:0.1:48:0.25:0.15:0.5:50:20:1:96"
     
-    # # pred_len 192 - medium model with 4 heads
-    # "192:4:16:256:4:1:128:0.001:0.2:12:0.2:0.15:0.4:100:20:1:96"
+    # pred_len 192 - medium model with 4 heads
+    "192:4:16:256:4:1:128:0.001:0.2:12:0.2:0.15:0.4:100:20:1:96"
     
-    # # pred_len 336 - 2 layers, 2 heads
-    # "336:4:8:256:2:2:256:0.001:0.2:36:0.25:0.15:0.2:30:20:1:96"
+    # pred_len 336 - 2 layers, 2 heads
+    "336:4:8:256:2:2:256:0.001:0.2:36:0.25:0.15:0.2:30:20:1:96"
     
-    # # pred_len 720 - 2 layers, no dropout, larger multiple_of
-    # "720:3:8:512:1:2:128:0.001:0.0:12:0.3:0.15:0.4:50:20:1:96"
+    # pred_len 720 - 2 layers, no dropout, larger multiple_of
+    "720:3:8:512:1:2:128:0.001:0.0:12:0.3:0.15:0.4:50:20:1:96"
 )
 
 # Run experiments

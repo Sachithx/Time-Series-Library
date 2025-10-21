@@ -6,7 +6,6 @@ import torch
 import torch.nn
 import torch.nn as nn
 from torch.nn import functional as F
-from torch.nn.attention.flex_attention import BlockMask
 
 from bytelatent.base_transformer import (
     BaseTransformer,
@@ -73,7 +72,7 @@ class CrossAttention(nn.Module):
         self,
         x: torch.Tensor,
         kv: torch.Tensor,
-        mask: Optional[Union[BlockMask, str]] = None,
+        mask: Optional[Union[str]] = None,
         attn_impl: str = "sdpa",
     ) -> torch.Tensor:
         # B S D
@@ -168,7 +167,7 @@ class GlobalTransformer(BaseTransformer):
         tokens: torch.Tensor,
         tok_idx: Optional[torch.Tensor] = None,
         embeds: Optional[torch.Tensor] = None,
-        mask: Optional[Union[BlockMask, torch.Tensor, str]] = None,
+        mask: Optional[Union[torch.Tensor, str]] = None,
         cache: Optional[List[Tuple[torch.Tensor, torch.Tensor, int]]] = None,
     ):
         """
