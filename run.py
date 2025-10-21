@@ -115,7 +115,7 @@ if __name__ == '__main__':
 
     # Augmentation
     parser.add_argument('--augmentation_ratio', type=int, default=0, help="How many times to augment")
-    parser.add_argument('--seed', type=int, default=2, help="Randomization seed")
+    parser.add_argument('--random_seed', type=int, default=2, help="Randomization seed")
     parser.add_argument('--jitter', default=False, action="store_true", help="Jitter preset augmentation")
     parser.add_argument('--scaling', default=False, action="store_true", help="Scaling preset augmentation")
     parser.add_argument('--permutation', default=False, action="store_true",
@@ -139,6 +139,52 @@ if __name__ == '__main__':
 
     # TimeXer
     parser.add_argument('--patch_len', type=int, default=16, help='patch length')
+
+    # EntroPE
+    parser.add_argument('--entropy_model_checkpoint_dir', type=str, default='./entropy_model_checkpoints/', 
+                        help='directory for entropy model checkpoints')
+    parser.add_argument('--model_id_name', type=str, default='ETTh1', help='model id name for EntroPE')
+    parser.add_argument('--vocab_size', type=int, default=256, help='vocabulary size for EntroPE')
+    parser.add_argument('--quant_range', type=int, default=3, help='quantization range for EntroPE')
+    parser.add_argument('--n_layers_local_encoder', type=int, default=1, help='number of local encoder layers for EntroPE')
+    parser.add_argument('--n_layers_local_decoder', type=int, default=1, help='number of local decoder layers for EntroPE')
+    parser.add_argument('--n_layers_global', type=int, default=1, help='number of global layers for EntroPE')
+    parser.add_argument('--dim_global', type=int, default=8, help='dimension of global for EntroPE')
+    parser.add_argument('--dim_local_encoder', type=int, default=8, help='dimension of local encoder for EntroPE')
+    parser.add_argument('--dim_local_decoder', type=int, default=8, help='dimension of local decoder for EntroPE')
+    parser.add_argument('--cross_attn_k', type=int, default=1, help='cross attention k for EntroPE')
+    parser.add_argument('--n_heads_local_encoder', type=int, default=1, help='number of heads in local encoder for EntroPE')
+    parser.add_argument('--n_heads_local_decoder', type=int, default=1, help='number of heads in local decoder for EntroPE')
+    parser.add_argument('--n_heads_global', type=int, default=1, help='number of heads in global for EntroPE')
+    parser.add_argument('--cross_attn_nheads', type=int, default=1, help='cross attention number of heads for EntroPE')
+    parser.add_argument('--cross_attn_window_encoder', type=int, default=96, help='cross attention window size in encoder for EntroPE')
+    parser.add_argument('--cross_attn_window_decoder', type=int, default=96, help='cross attention window size in decoder for EntroPE')
+    parser.add_argument('--local_attention_window_len', type=int, default=96, help='local attention window length for EntroPE')
+    parser.add_argument('--multiple_of', type=int, default=256, help='multiple of for EntroPE')
+    parser.add_argument('--max_patch_length', type=int, default=48, help='maximum patch length for EntroPE')
+    parser.add_argument('--patching_threshold', type=float, default=0.25, help='patching threshold for EntroPE')
+    parser.add_argument('--patching_threshold_add', type=float, default=0.15, help='additional patching threshold for EntroPE')
+    parser.add_argument('--monotonicity', type=int, default=1, help='monotonicity for EntroPE')
+    parser.add_argument('--pct_start', type=float, default=0.5, help='percentage start for EntroPE')
+    parser.add_argument('--patching_batch_size', type=int, default=1792, help='patching batch size for EntroPE') 
+
+    # RevIN and decomposition
+    parser.add_argument('--revin', type=int, default=1, 
+                        help='use RevIN (1: True, 0: False)')
+    parser.add_argument('--affine', type=int, default=1, 
+                        help='RevIN affine transformation (1: True, 0: False)')
+    parser.add_argument('--subtract_last', type=int, default=0, 
+                        help='RevIN normalization (0: subtract mean, 1: subtract last)')
+    parser.add_argument('--decomposition', type=int, default=0, 
+                        help='use decomposition (1: True, 0: False)')
+    parser.add_argument('--kernel_size', type=int, default=25, 
+                        help='decomposition kernel size')
+    parser.add_argument('--individual', type=int, default=0, 
+                        help='individual head per variable (1: True, 0: False)')  
+    
+    # Regularization
+    parser.add_argument('--head_dropout', type=float, default=0.1, 
+                        help='prediction head dropout')
 
     args = parser.parse_args()
     if torch.cuda.is_available() and args.use_gpu:
