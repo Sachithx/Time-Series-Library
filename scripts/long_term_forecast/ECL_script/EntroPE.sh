@@ -57,6 +57,7 @@ for config in "${configs[@]}"; do
             echo "Running seed $random_seed for pred_len=$pred_len on GPU $gpu_id"
             
             CUDA_VISIBLE_DEVICES=$gpu_id python -u run_longExp.py \
+                --task_name long_term_forecast \
                 --random_seed $random_seed \
                 --is_training 1 \
                 --root_path $root_path_name \

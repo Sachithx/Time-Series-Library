@@ -39,9 +39,9 @@ if __name__ == '__main__':
     parser.add_argument('--checkpoints', type=str, default='./checkpoints/', help='location of model checkpoints')
 
     # forecasting task
-    parser.add_argument('--seq_len', type=int, default=96, help='input sequence length')
+    parser.add_argument('--seq_len', type=int, default=1751, help='input sequence length')
     parser.add_argument('--label_len', type=int, default=48, help='start token length')
-    parser.add_argument('--pred_len', type=int, default=96, help='prediction sequence length')
+    parser.add_argument('--pred_len', type=int, default=1751, help='prediction sequence length')
     parser.add_argument('--seasonal_patterns', type=str, default='Monthly', help='subset for M4')
     parser.add_argument('--inverse', action='store_true', help='inverse output data', default=False)
 
@@ -82,7 +82,7 @@ if __name__ == '__main__':
     parser.add_argument('--down_sampling_window', type=int, default=1, help='down sampling window size')
     parser.add_argument('--down_sampling_method', type=str, default=None,
                         help='down sampling method, only support avg, max, conv')
-    parser.add_argument('--seg_len', type=int, default=96,
+    parser.add_argument('--seg_len', type=int, default=1751,
                         help='the length of segmen-wise iteration of SegRNN')
 
     # optimization
@@ -157,9 +157,9 @@ if __name__ == '__main__':
     parser.add_argument('--n_heads_local_decoder', type=int, default=1, help='number of heads in local decoder for EntroPE')
     parser.add_argument('--n_heads_global', type=int, default=1, help='number of heads in global for EntroPE')
     parser.add_argument('--cross_attn_nheads', type=int, default=1, help='cross attention number of heads for EntroPE')
-    parser.add_argument('--cross_attn_window_encoder', type=int, default=96, help='cross attention window size in encoder for EntroPE')
-    parser.add_argument('--cross_attn_window_decoder', type=int, default=96, help='cross attention window size in decoder for EntroPE')
-    parser.add_argument('--local_attention_window_len', type=int, default=96, help='local attention window length for EntroPE')
+    parser.add_argument('--cross_attn_window_encoder', type=int, default=1751, help='cross attention window size in encoder for EntroPE')
+    parser.add_argument('--cross_attn_window_decoder', type=int, default=1751, help='cross attention window size in decoder for EntroPE')
+    parser.add_argument('--local_attention_window_len', type=int, default=1751, help='local attention window length for EntroPE')
     parser.add_argument('--multiple_of', type=int, default=256, help='multiple of for EntroPE')
     parser.add_argument('--max_patch_length', type=int, default=48, help='maximum patch length for EntroPE')
     parser.add_argument('--patching_threshold', type=float, default=0.25, help='patching threshold for EntroPE')

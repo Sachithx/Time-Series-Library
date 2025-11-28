@@ -46,7 +46,7 @@ class BaseTransformerArgs(BaseModel):
     init_base_std: float | None = None
     init_std_factor: InitStdFactor = InitStdFactor.DISABLED
 
-    max_seqlen: int = 96
+    max_seqlen: int = 1751
 
     attn_impl: str | None = "sdpa"
     attn_bias_type: str | None = None

@@ -461,16 +461,23 @@ class ByteLatentTransformer(nn.Module, SequenceModelWithOutput):
         local_encoder_tokens, local_decoder_tokens = tokens, tokens
 
         # Generate patches
-        if patch_lengths is None:
-            assert hasattr(self, "patcher"), "Patcher not defined and no patch_lengths passed"
-            patch_lengths, _ = self.patcher.patch(
-                local_encoder_tokens,
-                include_next_token=True,
-                threshold=self.patcher.threshold,
-            )
-        else:
-            if nb_boe > 0:
-                patch_lengths[:, 0] += nb_boe
+        # make patch lengths by dividing N into patches of size 8
+        patch_lengths = torch.full(
+            (bs, (N + 15) // 16),
+            16,
+            device=tokens.device,
+            dtype=torch.long,
+        )
+        # if patch_lengths is None:
+        #     assert hasattr(self, "patcher"), "Patcher not defined and no patch_lengths passed"
+        #     patch_lengths, _ = self.patcher.patch(
+        #         local_encoder_tokens,
+        #         include_next_token=True,
+        #         threshold=self.patcher.threshold,
+        #     )
+        # else:
+        #     if nb_boe > 0:
+        #         patch_lengths[:, 0] += nb_boe
 
         assert torch.min(patch_lengths) >= 0, "Patch lengths must be non-negative"
 
@@ -515,7 +522,7 @@ class ByteLatentTransformer(nn.Module, SequenceModelWithOutput):
         global_tokens[rows, eos_patch_ids] = self.eos_id
 
         h, _ = self.global_transformer(embeds=h, tokens=global_tokens)
-
+        # return h
         # Prepare decoder inputs
         dec_embeds = h_encoder[:, nb_boe : nb_boe + N, :]
 

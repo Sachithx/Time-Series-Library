@@ -10,7 +10,7 @@ data_path_name=ETTh1.csv
 model_id_name=ETTh1
 data_name=ETTh1
 enc_in=7
-seq_len=96
+seq_len=192
 
 # Random seeds
 random_seeds="1025 2048 3072 4096 5120"
